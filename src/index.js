@@ -6,9 +6,6 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
-
 app.use(cors());
 
 //config database
@@ -30,8 +27,12 @@ app.set("views", __dirname + "/views");
 
 
 app.get('/', (req, res) => {
-    res.render("home", {title: "WEB - 1640"})
+    res.render("home", {title: "Home Page"});
 });
+app.get('/login', (req, res) => {
+    res.render("login", {title: "Login Page"});
+});
+
 app.listen(PORT, () => {
     console.log(`Server run on ${PORT}`);
 });
