@@ -20,6 +20,10 @@ const dbConfig = {
 };
 const pool = mysql.createPool(dbConfig);
 
+//config static file
+app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.get('/', (req, res) => {
     res.render("home", {title: "WEB - 1640"})
 });
