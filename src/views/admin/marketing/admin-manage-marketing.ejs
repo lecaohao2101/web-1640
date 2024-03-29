@@ -28,7 +28,9 @@
                 <td><%= marketing.marketing_email %></td>
                 <td>
                   <a href="/admin/marketing/admin-edit-marketing/<%= marketing.marketing_id %>" class="btn btn-primary btn-sm">Edit</a>
-                  <a href="/admin/marketing/delete/<%= marketing.marketing_id %>" class="btn btn-danger btn-sm">Delete</a>
+                  <form action="/admin/marketing/admin-delete-marketing/<%= marketing.marketing_id %>" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </form>
                 </td>
               </tr>
             <% }); %>

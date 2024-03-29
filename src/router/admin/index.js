@@ -259,6 +259,20 @@ router.post("/marketing/admin-edit-marketing/:manager_id", async (req, res) => {
     connection.release();
     res.redirect("/admin/marketing/admin-manage-marketing");
 });
+
+
+//delete marketing manager
+router.post("/marketing/admin-delete-marketing/:manager_id", async (req, res) => {
+    const manager_id = req.params.manager_id;
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("DELETE FROM marketing WHERE marketing_id = ?", [manager_id]);
+    await connection.query("DELETE FROM departmentManager WHERE department_manager_id = ?", [req.params.manager_id]);
+    connection.release()
+    res.redirect("/admin/marketing/admin-manage-marketing");
+});
+
+
+
 module.exports = router;
 
 
