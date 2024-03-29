@@ -111,6 +111,43 @@ router.get("/coordinator/admin-manage-coordinator", async (req, res) => {
 });
 
 
+// add coordinator
+router.get("/coordinator/admin-add-coordinator", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * FROM faculty");
+    connection.release();
+    res.render("admin/coordinator/admin-add-coordinator", { faculty: rows });
+});
+router.post("/coordinator/admin-add-coordinator", async (req, res) => {
+    const { name, email, password, department } = req.body;
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "INSERT INTO departmentManager(manager_name, manager_email, manager_password, department_id) VALUES(?, ?, ?, ?)",
+        [name, email, password, department]
+    );
+    connection.release();
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "lecaohao2101@gmail.com",
+            pass: "zozsertkmqozztta",
+        },
+    });
+
+    const mailOptions = {
+        from: "datistpham@gmail.com",
+        to: email,
+        subject: "Information Account Student",
+        text: `Hello ${name},\n\nYour account has been created.\nEmail: ${email}\nPassword: ${password}\n\nThank You!.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+    res.redirect("/admin/coordinator/admin-manage-coordinator");
+});
+
+
+
 
 module.exports = router;
 
