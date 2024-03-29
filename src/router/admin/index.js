@@ -147,6 +147,34 @@ router.post("/coordinator/admin-add-coordinator", async (req, res) => {
 });
 
 
+// Edit coordinator
+router.get("/coordinator/admin-edit-coordinator/:id", checkAdminRole, async (req, res) => {
+    try {
+        const connection = await pool.getConnection();
+        const [departmentManagerRows] = await connection.query("SELECT * FROM departmentManager WHERE department_manager_id = ?", [req.params.id]);
+        const [facultyRows] = await connection.query("SELECT * FROM faculty");
+        connection.release();
+        res.render("admin/coordinator/admin-edit-coordinator", { departmentManager: departmentManagerRows[0], faculty: facultyRows });
+    } catch (error) {
+        console.error("Error fetching coordinator:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+router.post("/coordinator/admin-edit-coordinator/:id", checkAdminRole, async (req, res) => {
+    try {
+        const { name, email, faculty } = req.body;
+        const connection = await pool.getConnection();
+        await connection.query("UPDATE departmentManager SET manager_name = ?, manager_email = ?, department_id = ? WHERE department_manager_id = ?", [name, email, faculty, req.params.id]); // Sửa "department" thành "faculty"
+        connection.release();
+        res.redirect("/admin/coordinator/admin-manage-coordinator");
+    } catch (error) {
+        console.error("Error updating coordinator:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
 
 
 module.exports = router;
