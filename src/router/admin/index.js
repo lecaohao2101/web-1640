@@ -174,7 +174,13 @@ router.post("/coordinator/admin-edit-coordinator/:id", checkAdminRole, async (re
 });
 
 
-
+// delete coordinator
+router.post("/coordinator/admin-delete-coordinator/:manager_id", async (req, res) => {
+    const connection = await pool.getConnection();
+    await connection.query("DELETE FROM departmentManager WHERE department_manager_id = ?", [req.params.manager_id]);
+    connection.release();
+    res.redirect("/admin/coordinator/admin-manage-coordinator");
+})
 
 
 module.exports = router;
