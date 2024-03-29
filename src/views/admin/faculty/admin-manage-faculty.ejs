@@ -28,7 +28,9 @@
                 <td><%= department.department_name %></td>
                 <td>
                     <a href="/admin/faculty/admin-edit-faculty/<%= department.department_id %>" class="btn btn-primary">Edit</a>
-                    <a href="/admin/deleteFaculty/<%= department.department_id %>" class="btn btn-danger">Delete</a>
+                    <form action="/admin/faculty/admin-delete-faculty/<%= department.department_id %>" method="post">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
         <% }); %>

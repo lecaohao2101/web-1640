@@ -317,6 +317,14 @@ router.post("/faculty/admin-edit-faculty/:facultyId", async (req, res)=> {
 })
 
 
+//delete faculty
+router.post("/faculty/admin-delete-faculty/:facultyId", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("DELETE FROM faculty WHERE department_id = ?", [req.params.facultyId]);
+    connection.release()
+    res.redirect("/admin/faculty/admin-manage-faculty");
+});
+
 
 
 
