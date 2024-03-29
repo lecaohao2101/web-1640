@@ -196,6 +196,40 @@ router.get("/marketing/admin-manage-marketing", async (req, res) => {
 });
 
 
+//add marketing manager
+router.get("/marketing/admin-add-marketing", async (req, res)=> {
+    res.render("admin/marketing/admin-add-marketing");
+})
+router.post("/marketing/admin-add-marketing", async (req, res) => {
+    const { email, name, password } = req.body;
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "INSERT INTO marketing(marketing_name, marketing_email, marketing_password ) VALUES(?, ?, ?)",
+        [name, email, password]
+    );
+    connection.release();
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "lecaohao2101@gmail.com",
+            pass: "zozsertkmqozztta",
+        },
+    });
+
+    const mailOptions = {
+        from: "datistpham@gmail.com",
+        to: email,
+        subject: "Information Account Student",
+        text: `Hello ${name},\n\nYour account has been created.\nEmail: ${email}\nPassword: ${password}\n\nThank You!.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+    res.redirect("/admin/marketing/admin-manage-marketing");
+});
+
+
+
 module.exports = router;
 
 
