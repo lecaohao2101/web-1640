@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student List</title>
+    <title>Manage Student</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -71,7 +71,6 @@
             background-color: #0056b3;
         }
 
-        /* CSS của navigation bar */
         .topnav {
             overflow: hidden;
             background-color: #3a7efc;
@@ -129,6 +128,17 @@
 
         }
 
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            margin: 0 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -154,14 +164,18 @@
 </div>
 
 <div class="container">
-    <h1>Student List</h1>
+    <h1>Manage Student</h1>
+    <div class="mb-3">
+        <a href="/admin/student/admin-add-student" class="btn btn-primary">Add Student</a>
+    </div>
+    <br/>
     <table class="table">
         <thead>
         <tr>
             <th scope="col">Number</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
-            <th scope="col">Department</th>
+            <th scope="col">Faculty</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -171,10 +185,12 @@
                 <th scope="row"><%= index + 1 %></th>
                 <td><%= student.student_name %></td>
                 <td><%= student.student_email %></td>
-                <td><%= student.student_department_id %></td>
-                <td>
-                    <a href="/admin/admin-edit-student<%= student.student_id %>" class="btn btn-primary btn-sm">Edit</a>
-                    <a href="/students/delete/<%= student.student_id %>" class="btn btn-danger btn-sm">Delete</a>
+                <td><%= student.department_name %>
+                <td class="action-buttons">
+                    <a href="/admin/student/admin-edit-student/<%= student.student_id %>" class="btn btn-primary btn-sm">Edit</a>
+                    <form action="/admin/student/admin-delete-student/<%= student.student_id %>" method="post">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
         <% }); %>

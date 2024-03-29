@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2/promise");
 const checkLoggedIn = require("../../middleware/checkLogin");
+const checkAdminRole = require("../../middleware/checkAdmin");
+const nodemailer = require("nodemailer");
 
-
+//config database
 const dbConfig = {
     host: "localhost",
     user: "root",
@@ -14,63 +16,81 @@ const pool = mysql.createPool(dbConfig);
 
 router.use(checkLoggedIn)
 
-//login
-router.post("/login", async (req, res) => {
+//admin page
+router.get("/admin_page", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
-    const { email, password } = req.body;
-
-    //admin
-    const [rows] = await connection.query(
-        "SELECT * FROM Admin WHERE admin_account = ? AND admin_password = ?",
-        [email, password]
-    );
-    if (rows.length > 0) {
-        res.cookie("uid", rows[0].id);
-        res.cookie("role", "admin");
-        connection.release();
-        return res.redirect("admin/admin_page");
-    }
-
-    //coordinator
-    const [rows1] = await connection.query(
-      "SELECT * FROM departmentManager WHERE manager_email = ? AND manager_password = ?",
-      [email, password]
-    );
-    if (rows1.length > 0) {
-      res.cookie("uid", rows1[0].department_manager_id);
-      res.cookie("role", "d_manager");
-      connection.release();
-      return res.redirect("coordinator/coordinator_page");
-    }
-
-    //marketing
-    const [rows2] = await connection.query(
-      "SELECT * FROM marketingManager WHERE manager_email = ? AND manager_password = ?",
-      [email, password]
-    );
-    if (rows2.length > 0) {
-      res.cookie("uid", rows2[0].marketing_id);
-      res.cookie("role", "marketing");
-      connection.release();
-      return res.redirect("marketing/marketing_page");
-    }
-
-    //student
-    const [rows3] = await connection.query(
-        "SELECT * FROM student WHERE student_email = ? AND student_password= ?",
-        [email, password]
-    );
-    if (rows3.length > 0) {
-        res.cookie("uid", rows3[0].student_id);
-        res.cookie("role", "student");
-        connection.release();
-        return res.redirect("student/student_page");
-    }
-    else {
-        return res.send(
-            "Account or password is incorrect or does not exist"
-        );
-    }
+    connection.release();
+    res.render("admin/admin_page", {title: "Admin"});
 });
+
+//admin manage student
+router.get("/student/admin-manage-student", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT student.*, faculty.department_name FROM student INNER JOIN faculty ON student.student_department_id = faculty.department_id ORDER BY student.student_name");
+    connection.release();
+    res.render("admin/student/admin-manage-student", { students: rows });
+});
+
+// add student
+router.get("/student/admin-add-student", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * from faculty");
+    connection.release();
+    res.render("admin/student/admin-add-student", { faculty: rows});
+});
+router.post("/student/admin-add-student", async (req, res) => {
+    const { name, email, password, department } = req.body;
+    const connection = await pool.getConnection();
+    await connection.query("INSERT INTO student(student_name, student_email, student_password, student_department_id) VALUES(?, ?, ?, ?)", [name, email, password, department]);
+    const [rows] = await connection.query("SELECT * FROM student ORDER BY student_name");
+    connection.release();
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "lecaohao2101@gmail.com",
+            pass: "zozsertkmqozztta",
+        },
+    });
+
+    const mailOptions = {
+        from: "datistpham@gmail.com",
+        to: email,
+        subject: "Information Account Student",
+        text: `Hello ${name},\n\nYour account has been created.\nEmail: ${email}\nPassword: ${password}\n\nThank You!.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
+    res.render("admin/student/admin-manage-student", { students: rows });
+});
+
+// edit student
+router.get("/student/admin-edit-student/:id", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const [studentRows] = await connection.query("SELECT * FROM student WHERE student_id = ?", [req.params.id]);
+    const [facultyRows] = await connection.query("SELECT * FROM faculty");
+    connection.release();
+    res.render("admin/student/admin-edit-student", { student: studentRows[0], faculty: facultyRows });
+});
+
+
+// update student
+router.post("/student/admin-edit-student/:id", checkAdminRole, async (req, res) => {
+    const { name, email, department } = req.body;
+    const connection = await pool.getConnection();
+    await connection.query("UPDATE student SET student_name = ?, student_email = ?, student_department_id = ? WHERE student_id = ?", [name, email, department, req.params.id]);
+    connection.release();
+    res.redirect("/admin/student/admin-manage-student");
+});
+
+// delete student
+router.post("/student/admin-delete-student/:id", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    await connection.query("DELETE FROM student WHERE student_id = ?", [req.params.id]);
+    connection.release();
+    res.redirect("/admin/student/admin-manage-student");
+});
+
+module.exports = router;
 
 

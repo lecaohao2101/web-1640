@@ -6,7 +6,10 @@ const cookieParser = require("cookie-parser");
 const checkAdminRole = require("./middleware/checkAdmin");
 const checkLoggedIn = require("./middleware/checkLogin");
 const extractUidFromCookie = require("./middleware/exactCookie");
-
+const adminRouter = require("./router/admin");
+const coordinatorRouter = require("./router/coordinator");
+const marketingRouter = require("./router/marketing");
+const studentRouter = require("./router/student");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -37,6 +40,11 @@ app.set("views", __dirname + "/views");
 app.use(cookieParser());
 app.use(checkLoggedIn);
 app.use(extractUidFromCookie);
+
+app.use('/admin', adminRouter);
+app.use('/coordinator', coordinatorRouter);
+app.use('/marketing', marketingRouter);
+app.use('/student', studentRouter);
 
 //home page
 app.get('/', async(req, res) => {
@@ -114,78 +122,6 @@ app.get('/logout', (req, res) => {
     res.clearCookie('role');
     res.redirect('/login_page');
 });
-
-//admin page
-app.get("/admin/admin_page", checkAdminRole, async (req, res) => {
-    const connection = await pool.getConnection();
-    connection.release();
-    res.render("admin/admin_page", {title: "Admin"});
-});
-
-//coordinator page
-app.get("/coordinator/coordinator_page", checkAdminRole, async (req, res) => {
-    const connection = await pool.getConnection();
-    connection.release();
-    res.render("coordinator/coordinator_page", {title: "Coordinator"});
-});
-
-//marketing page
-app.get("/marketing/marketing_page", checkAdminRole, async (req, res) => {
-    const connection = await pool.getConnection();
-    connection.release();
-    res.render("marketing/marketing_page", {title: "Marketing"});
-});
-
-//student page
-app.get("/student/student_page", async (req, res) => {
-    const connection = await pool.getConnection();
-    const student_id = req.cookies.uid;
-    connection.release();
-    res.render("student/student_page", {title: "Student"});
-});
-
-
-//admin manage student
-app.get("/admin/admin-manage-student", checkAdminRole, async (req, res) => {
-    const connection = await pool.getConnection();
-    const [rows] = await connection.query("SELECT * FROM student ORDER BY student_name");
-    connection.release();
-    res.render("admin/admin-manage-student", { students: rows });
-});
-app.get("/students/edit/:student_id", checkAdminRole, async (req, res) => {
-    const connection = await pool.getConnection();
-    const { student_id } = req.params;
-    const [rows] = await connection.query(
-        "SELECT * FROM student WHERE student_id= ?",
-        [student_id]
-    );
-    connection.release();
-    res.render("admin/updateStudent", {
-        student: rows?.[0],
-        title: "Update student",
-    });
-});
-
-app.get("/students/delete/:student_id", checkAdminRole, async (req, res) => {
-    const connection = await pool.getConnection();
-    const { student_id } = req.params;
-    const [rows] = await connection.query(
-        "SELECT * FROM student WHERE student_id= ?",
-        [student_id]
-    );
-    connection.release();
-    res.render("admin/deleteStudent", {
-        student: rows?.[0],
-        title: "Delete student",
-    });
-});
-
-
-
-
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Server run on ${PORT}`);
