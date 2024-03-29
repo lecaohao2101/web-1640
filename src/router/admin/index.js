@@ -271,6 +271,18 @@ router.post("/marketing/admin-delete-marketing/:manager_id", async (req, res) =>
     res.redirect("/admin/marketing/admin-manage-marketing");
 });
 
+//____________________________________________________________________________________________________________________/
+
+//faculty manage
+router.get("/faculty/admin-manage-faculty", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * from faculty");
+    res.render("admin/faculty/admin-manage-faculty", { title: "Manage Faculty", departments: rows });
+});
+
+
+
+
 
 
 module.exports = router;
