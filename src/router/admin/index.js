@@ -229,7 +229,36 @@ router.post("/marketing/admin-add-marketing", async (req, res) => {
 });
 
 
-
+// edit marketing manager
+router.get("/marketing/admin-edit-marketing/:manager_id", async (req, res) => {
+    const manager_id = req.params.manager_id;
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "SELECT * FROM marketing WHERE marketing_id = ?",
+        [manager_id]
+    );
+    connection.release();
+    res.render("admin/marketing/admin-edit-marketing", {
+        title: "Update marketing",
+        marketing: rows[0],
+        success: false
+    });
+});
+router.post("/marketing/admin-edit-marketing/:manager_id", async (req, res) => {
+    const { name, email } = req.body;
+    const { manager_id } = req.params;
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "UPDATE marketing SET marketing_name= ?, marketing_email= ? WHERE marketing_id= ?",
+        [name, email, manager_id]
+    );
+    const [rows1] = await connection.query(
+        "SELECT * FROM marketing WHERE marketing_id = ?",
+        [manager_id]
+    );
+    connection.release();
+    res.redirect("/admin/marketing/admin-manage-marketing");
+});
 module.exports = router;
 
 
