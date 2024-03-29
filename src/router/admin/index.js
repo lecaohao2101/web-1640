@@ -294,6 +294,28 @@ router.post("/faculty/admin-add-faculty", async (req, res) => {
 });
 
 
+//edit faculty
+router.get("/faculty/admin-edit-faculty/:facultyId", async (req, res) => {
+    const connection = await pool.getConnection();
+    const facultyId = req.params.facultyId;
+    const [rows] = await connection.query(
+        "SELECT * from faculty WHERE department_id= ?",
+        [facultyId]
+    );
+    console.log(rows[0]);
+    res.render("admin/faculty/admin-edit-faculty", {
+        title: "Update Faculty",
+        department: rows[0],
+    });
+});
+router.post("/faculty/admin-edit-faculty/:facultyId", async (req, res)=> {
+    const connection= await pool.getConnection()
+    const facultyId= req.params.facultyId
+    const {name }= req.body
+    const [rows]= await connection.query('update faculty SET department_name= ? WHERE department_id= ?', [name, facultyId])
+    res.redirect("/admin/faculty/admin-manage-faculty");
+})
+
 
 
 
