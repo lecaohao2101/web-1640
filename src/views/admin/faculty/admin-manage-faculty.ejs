@@ -10,7 +10,7 @@
 
 <div class="container mt-5">
 
-    <a href="/admin/addFaculty" class="btn btn-primary btn-sm">Add faculty</a>
+    <a href="/admin/faculty/admin-add-faculty" class="btn btn-primary btn-sm">Add faculty</a>
 
     <h1>Manage Faculty</h1>
     <table class="table">
@@ -27,7 +27,7 @@
                 <td><%= department.department_id %></td>
                 <td><%= department.department_name %></td>
                 <td>
-                    <a href="/admin/editFaculty/<%= department.department_id %>" class="btn btn-primary">Edit</a>
+                    <a href="/admin/faculty/admin-edit-faculty/<%= department.department_id %>" class="btn btn-primary">Edit</a>
                     <a href="/admin/deleteFaculty/<%= department.department_id %>" class="btn btn-danger">Delete</a>
                 </td>
             </tr>

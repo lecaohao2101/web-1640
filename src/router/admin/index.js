@@ -281,6 +281,19 @@ router.get("/faculty/admin-manage-faculty", async (req, res) => {
 });
 
 
+//add faculty
+router.get("/faculty/admin-add-faculty", async (req, res) => {
+    res.render("admin/faculty/admin-add-faculty");
+});
+router.post("/faculty/admin-add-faculty", async (req, res) => {
+    const connection= await pool.getConnection()
+    const {name }= req.body
+    const [result] = await connection.execute('INSERT into faculty(department_name) VALUES (?)', [name]);
+    await connection.release();
+    res.redirect("/admin/faculty/admin-manage-faculty");
+});
+
+
 
 
 
