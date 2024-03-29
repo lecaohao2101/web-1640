@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Manage</title>
+    <title>Coordinator Manage</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -164,15 +164,15 @@
 </div>
 
 <div class="container">
-    <h1>Manage Student</h1>
+    <h1>Manage Coordinator</h1>
     <div class="mb-3">
-        <a href="/admin/student/admin-add-student" class="btn btn-primary">Add Student</a>
+        <a href="/admin/coordinator/admin-add-coordinator" class="btn btn-primary">Add Coordinator</a>
     </div>
     <br/>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col">Number</th>
+            <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Faculty</th>
@@ -180,15 +180,15 @@
         </tr>
         </thead>
         <tbody>
-        <% students.forEach((student, index) => { %>
+        <% departments.forEach((department) => { %>
             <tr>
-                <th scope="row"><%= index + 1 %></th>
-                <td><%= student.student_name %></td>
-                <td><%= student.student_email %></td>
-                <td><%= student.department_name %></td>
-                <td class="action-buttons">
-                    <a href="/admin/student/admin-edit-student/<%= student.student_id %>" class="btn btn-primary btn-sm">Edit</a>
-                    <form action="/admin/student/admin-delete-student/<%= student.student_id %>" method="post">
+                <td><%= department.department_manager_id %></td>
+                <td><%= department.manager_name %></td>
+                <td><%= department.manager_email %></td>
+                <td><%= department.department_name %></td>
+                <td  class="action-buttons">
+                    <a href="/admin/coordinator/admin-edit-coordinator/<%= department.department_manager_id %>" class="btn btn-primary btn-sm">Edit</a>
+                    <form action="/admin/coordinator/admin-delete-coordinator/<%= department.department_manager_id %>" method="post">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>

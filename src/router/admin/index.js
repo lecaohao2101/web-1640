@@ -23,6 +23,7 @@ router.get("/admin_page", checkAdminRole, async (req, res) => {
     res.render("admin/admin_page", {title: "Admin"});
 });
 
+
 //admin manage student
 router.get("/student/admin-manage-student", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
@@ -30,6 +31,7 @@ router.get("/student/admin-manage-student", checkAdminRole, async (req, res) => 
     connection.release();
     res.render("admin/student/admin-manage-student", { students: rows });
 });
+
 
 // add student
 router.get("/student/admin-add-student", checkAdminRole, async (req, res) => {
@@ -64,6 +66,7 @@ router.post("/student/admin-add-student", async (req, res) => {
     res.render("admin/student/admin-manage-student", { students: rows });
 });
 
+
 // edit student
 router.get("/student/admin-edit-student/:id", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
@@ -83,6 +86,7 @@ router.post("/student/admin-edit-student/:id", checkAdminRole, async (req, res) 
     res.redirect("/admin/student/admin-manage-student");
 });
 
+
 // delete student
 router.post("/student/admin-delete-student/:id", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
@@ -90,6 +94,23 @@ router.post("/student/admin-delete-student/:id", checkAdminRole, async (req, res
     connection.release();
     res.redirect("/admin/student/admin-manage-student");
 });
+
+/______________________________________________________________________________________________________________________/
+
+//manege coordinator
+router.get("/coordinator/admin-manage-coordinator", async (req, res) => {
+    try {
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query("SELECT departmentManager.*, faculty.department_name FROM departmentManager INNER JOIN faculty ON departmentManager.department_id = faculty.department_id");
+        connection.release();
+        res.render("admin/coordinator/admin-manage-coordinator", { departments: rows });
+    } catch (error) {
+        console.error("Error fetching departments:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
 
 module.exports = router;
 
