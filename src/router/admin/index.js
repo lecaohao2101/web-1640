@@ -13,6 +13,8 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 router.use(checkLoggedIn)
+
+//login
 router.post("/login", async (req, res) => {
     const connection = await pool.getConnection();
     const { email, password } = req.body;

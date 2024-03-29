@@ -38,15 +38,19 @@ app.use(cookieParser());
 app.use(checkLoggedIn);
 app.use(extractUidFromCookie);
 
-
+//home page
 app.get('/', async(req, res) => {
     const connection = await pool.getConnection();
     connection.release();
     res.render("home", {title: "Home Page"});
 });
+
+//login page
 app.get('/login_page', (req, res) => {
     res.render("login_page", {title: "Login Page"});
 });
+
+//login
 app.post("/login", async (req, res) => {
     const connection = await pool.getConnection();
     const { email, password } = req.body;
@@ -103,26 +107,36 @@ app.post("/login", async (req, res) => {
         );
     }
 });
+
+//logout
 app.get('/logout', (req, res) => {
     res.clearCookie('uid');
     res.clearCookie('role');
     res.redirect('/login_page');
 });
+
+//admin page
 app.get("/admin/admin_page", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
     connection.release();
     res.render("admin/admin_page", {title: "Admin"});
 });
+
+//coordinator page
 app.get("/coordinator/coordinator_page", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
     connection.release();
     res.render("coordinator/coordinator_page", {title: "Coordinator"});
 });
+
+//marketing page
 app.get("/marketing/marketing_page", checkAdminRole, async (req, res) => {
     const connection = await pool.getConnection();
     connection.release();
     res.render("marketing/marketing_page", {title: "Marketing"});
 });
+
+//student page
 app.get("/student/student_page", async (req, res) => {
     const connection = await pool.getConnection();
     const student_id = req.cookies.uid;
@@ -131,6 +145,40 @@ app.get("/student/student_page", async (req, res) => {
 });
 
 
+//admin manage student
+app.get("/admin/admin-manage-student", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * FROM student ORDER BY student_name");
+    connection.release();
+    res.render("admin/admin-manage-student", { students: rows });
+});
+app.get("/students/edit/:student_id", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const { student_id } = req.params;
+    const [rows] = await connection.query(
+        "SELECT * FROM student WHERE student_id= ?",
+        [student_id]
+    );
+    connection.release();
+    res.render("admin/updateStudent", {
+        student: rows?.[0],
+        title: "Update student",
+    });
+});
+
+app.get("/students/delete/:student_id", checkAdminRole, async (req, res) => {
+    const connection = await pool.getConnection();
+    const { student_id } = req.params;
+    const [rows] = await connection.query(
+        "SELECT * FROM student WHERE student_id= ?",
+        [student_id]
+    );
+    connection.release();
+    res.render("admin/deleteStudent", {
+        student: rows?.[0],
+        title: "Delete student",
+    });
+});
 
 
 
