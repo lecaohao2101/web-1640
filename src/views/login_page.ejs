@@ -118,16 +118,16 @@
     <div class="shape"></div>
     <div class="shape"></div>
 </div>
-<form>
+<form action="/login" method="post">
     <h3>Login Here</h3>
 
     <label for="email" class="input-icon"><i class="fas fa-envelope"></i>   Email</label>
-    <input type="text" placeholder="email@gmail.com" id="email">
+    <input type="email" placeholder="email@gmail.com" id="email" name="email" required>
 
     <label for="password" class="input-icon"><i class="fas fa-lock"></i>   Password</label>
-    <input type="password" placeholder="Password" id="password">
+    <input type="password" placeholder="Password" id="password" name="password" required>
 
-    <button>Log In</button>
+    <button type="submit">Log In</button>
 
 </form>
 </body>
