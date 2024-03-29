@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing List</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+
+    <a href="/admin/marketing/admin-add-marketing" class="btn btn-primary btn-sm">Add marketing manager</a>
+    <div class="row">
+      <div class="col-md-8">
+        <h1>Marketing List</h1>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% marketings.forEach((marketing) => { %>
+              <tr>
+                <td><%= marketing.marketing_name %></td>
+                <td><%= marketing.marketing_email %></td>
+                <td>
+                  <a href="/admin/marketing/edit/<%= marketing.marketing_id %>" class="btn btn-primary btn-sm">Edit</a>
+                  <a href="/admin/marketing/delete/<%= marketing.marketing_id %>" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>
