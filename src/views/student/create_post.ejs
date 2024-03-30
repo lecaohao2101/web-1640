@@ -1,0 +1,16 @@
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea class="form-control" id="content" name="content" rows="6" placeholder="Enter content" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="file" class="form-label">Upload Image or Document</label>
+        <input type="file" class="form-control" id="file" name="file">
+    </div>
+    <input type="hidden" name="student_id" value="<%= uid %>">
+    <button type="submit" class="btn btn-primary">Add Article</button>
+</form>

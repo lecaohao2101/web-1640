@@ -53,5 +53,32 @@ router.get("/edit_post/:article_id", async (req, res) => {
     // and redirecting to the view post page or handling errors.
  });
 
+ router.post("/create_post", upload.single("file"), async (req, res) => {
+    const { title, content, student_id } = req.body;
+    const file = req.file;
+    try {
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "INSERT into post(article_title, article_content, article_file, article_author_id, article_created_at, article_updated_at) VALUES(?, ?, ?, ?, ?, ?)",
+            [
+                title,
+                content,
+                file ? file.filename : null,
+                student_id,
+                new Date().toString,
+                new Date().toString,
+            ]
+        );
+        
+        connection.release();
+        res.redirect("/student/view_post");
+    } catch (error) {
+        console.error("Database query error:", error);
+        res.status(500).send("Database query error");
+    }
+});
+
+ 
+
 
 module.exports = router;
