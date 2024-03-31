@@ -35,6 +35,19 @@ router.get("/student_page", async (req, res) => {
     res.render("student/student_page", {title: "Student"});
 });
 
+router.get("/view_post", async (req, res) => {
+    const connection = await pool.getConnection();
+    const student_id = req.cookies.uid;
+    const [rows] = await connection.query(
+        "SELECT * FROM post WHERE article_author_id = ?",
+        [student_id]
+    );
+    console.log(rows);
+    connection.release();
+    res.render("student/view_post", { title: "Post", posts: rows });
+ });
+ 
+
 router.get("/edit_post/:article_id", async (req, res) => {
     const connection = await pool.getConnection();
     const student_id = req.cookies.uid;
