@@ -131,6 +131,9 @@
                <div class="card-img-container"> <!-- Thêm lớp này -->
                    <% if (post.article_file && (post.article_file.endsWith('.jpg') || post.article_file.endsWith('.jpeg') || post.article_file.endsWith('.png') || post.article_file.endsWith('.gif'))) { %>
                        <img src="http://localhost:3000/uploads/<%= post.article_file %>" class="card-img-top rounded" alt="Attachment">
+                   <% } else if (post.article_file && (post.article_file.endsWith('.pdf') || post.article_file.endsWith('.doc') || post.article_file.endsWith('.docx') || post.article_file.endsWith('.txt'))) { %>
+                       <p class="card-text">Attached document: <a download href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a></p>
+                   <% } %>
                </div>
                <div class="mt-3">
                    <a href="/student/editArticle/<%= post.article_id %>" class="btn btn-primary">Edit</a>
