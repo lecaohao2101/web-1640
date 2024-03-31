@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2/promise");
+const checkLoggedIn = require("../../middleware/checkLogin");
 const checkAdminRole = require("../../middleware/checkAdmin");
 
 const multer = require("multer");
