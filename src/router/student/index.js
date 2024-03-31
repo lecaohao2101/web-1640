@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("mysql2/promise");
 const checkLoggedIn = require("../../middleware/checkLogin");
-const checkAdminRole = require("../../middleware/checkAdmin");
 
 const multer = require("multer");
 const path = require("path");
@@ -16,6 +15,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+const nodemailer = require('nodemailer');
 
 //config database
 const dbConfig = {
@@ -47,27 +47,51 @@ router.get("/view_post", async (req, res) => {
   res.render("student/view_post", { title: "Post", posts: rows });
 });
 
+// get the edits
 router.get("/edit_post/:article_id", async (req, res) => {
-  const connection = await pool.getConnection();
-  const student_id = req.cookies.uid;
-  const article_id = req.params.article_id;
-  const [rows] = await connection.query(
-    "SELECT * FROM post WHERE article_author_id = ? AND article_id= ?",
-    [student_id, article_id]
-  );
-  connection.release();
-  res.render("student/edit_post", { title: "Post", article: rows[0] });
-});
+    const connection = await pool.getConnection();
+    const student_id = req.cookies.uid;
+    const article_id = req.params.article_id;
+    const [rows] = await connection.query(
+        "SELECT * FROM post WHERE article_author_id = ? AND article_id= ?",
+        [student_id, article_id]
+    );
+    connection.release();
+    res.render("student/edit_post", { title: "Post", article: rows[0] });
+ });
 
 // Post the edits
 router.post(
-  "/edit_post/:article_id",
-  upload.single("file"),
-  async (req, res) => {
-    // Implementation of the post handling, including updating the post details in the database
-    // and redirecting to the view post page or handling errors.
-  }
-);
+    "/edit_post/:article_id",
+    upload.single("file"),
+    async (req, res) => {
+        if (req.file) {
+            const file = req.file.filename;
+            const { title, content } = req.body;
+            const { article_id } = req.params;
+            const connection = await pool.getConnection();
+            const [rows] = await connection.query(
+                "UPDATE post SET article_title= ?, article_content= ?, article_file= ? WHERE article_id= ?",
+                [title, content, file, article_id]
+            );
+            connection.release();
+            return res.send("The article has been updated successfully");
+        }
+        const { title, content, file_old } = req.body;
+        const { article_id } = req.params;
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "UPDATE post SET article_title= ?, article_content= ?, article_file= ? WHERE article_id= ?",
+            [title, content, file_old, article_id]
+        );
+        connection.release();
+        res.redirect("/student/view_post");
+    }
+ );
+
+router.get("/create_post", async (req, res) => {
+    res.render("student/create_post");
+});
 
 router.post("/create_post", upload.single("file"), async (req, res) => {
   const { title, content, student_id } = req.body;
