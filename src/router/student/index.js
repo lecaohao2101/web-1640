@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
 const mysql = require("mysql2/promise");
 const checkLoggedIn = require("../../middleware/checkLogin");
 const checkAdminRole = require("../../middleware/checkAdmin");
 
+const multer = require('multer');
+const path = require('path');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
