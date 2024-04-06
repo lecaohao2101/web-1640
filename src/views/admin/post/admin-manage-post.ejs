@@ -38,7 +38,9 @@
                         <td>
                             <a href="/viewArticle/<%= post.article_id %>" class="btn btn-primary">View detail</a>
                             <a href="/editArticle/<%= post.article_id %>" class="btn btn-primary">Edit</a>
-                            <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download>Download as ZIP</a>
+<!--                            <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download>Download as ZIP</a>-->
+                            <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download="<%= post.article_title %>.zip">Download as ZIP</a>
+
                             <form action="/set-default-page/<%= post.article_id %>" method="post" style="display: inline;">
                                 <button type="submit" class="btn btn-info">Set as Default</button>
                             </form>

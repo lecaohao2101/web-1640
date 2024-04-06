@@ -9,7 +9,6 @@ const adminRouter = require("./router/admin");
 const coordinatorRouter = require("./router/coordinator");
 const marketingRouter = require("./router/marketing");
 const studentRouter = require("./router/student");
-const {query} = require("express");
 const PORT = process.env.PORT || 3000;
 const app = express();
 

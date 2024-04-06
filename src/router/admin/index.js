@@ -4,6 +4,10 @@ const mysql = require("mysql2/promise");
 const checkLoggedIn = require("../../middleware/checkLogin");
 const checkAdminRole = require("../../middleware/checkAdmin");
 const nodemailer = require("nodemailer");
+const path = require("path");
+const fs = require("fs");
+const archiver = require('archiver');
+
 
 
 //config database
@@ -365,8 +369,7 @@ router.get("/dashboard/analysis", async (req, res) => {
 });
 
 
-
-//session manage
+//manage post
 router.get("/post/admin-manage-post", async (req, res) => {
     const connection = await pool.getConnection();
     const [rows] = await connection.query(
@@ -377,6 +380,91 @@ router.get("/post/admin-manage-post", async (req, res) => {
     res.render("admin/post/admin-manage-post", { title: "Post manager", posts: rows });
 });
 
+router.get('/downloadPostsZip', async (req, res) => {
+    try {
+        const zipFileName = 'posts.zip';
+        const output = fs.createWriteStream(zipFileName);
+        const archive = archiver('zip');
+        archive.pipe(output);
+
+        const connection = await pool.getConnection();
+        const [posts] = await connection.query(
+            "SELECT * FROM post INNER JOIN student ON post.article_author_id = student.student_id",
+        );
+
+        for (const post of posts) {
+            const folderName = `${post.article_title}-${post.student_name.replace(/ /g, '_')}`;
+            const folderPath = path.join(__dirname, folderName);
+            const attachmentPath = path.join(__dirname, '..', 'uploads', post.article_file);
+
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
+            }
+
+            fs.copyFileSync(attachmentPath, path.join(folderPath, post.article_file));
+
+            archive.directory(folderPath, folderName);
+        }
+
+        archive.finalize();
+
+        output.on('close', () => {
+            res.download(zipFileName, zipFileName, (err) => {
+                if (!err) {
+                    fs.unlinkSync(zipFileName);
+                }
+            });
+        });
+    } catch (err) {
+        console.error('Error creating zip file:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/downloadPostAsZip/:articleId', async (req, res) => {
+    try {
+        const articleId = req.params.articleId;
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "SELECT * FROM post INNER JOIN student ON post.article_author_id = student.student_id WHERE article_id = ?",
+            [articleId]
+        );
+        connection.release();
+        const post = rows[0];
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        const output = fs.createWriteStream(__dirname + '/post.zip');
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+        const fileName = `${post.article_title}-${post.student_name}.zip`; // Tạo tên file mới
+        archive.file(__dirname + '/uploads/' + post.article_file, { name: post.article_file });
+
+        archive.pipe(output);
+
+        output.on('close', () => {
+            res.download(__dirname + '/post.zip', fileName, (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ error: 'Server error' });
+                }
+            });
+        });
+
+        archive.on('error', (err) => {
+            console.error(err);
+            return res.status(500).json({ error: 'Server error' });
+        });
+
+        archive.finalize();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
 
 module.exports = router;
 
