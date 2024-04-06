@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Posts</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Admin - Manage Posts</h1>
+            <div class="mb-3">
+                <a href="/admin/downloadPostsZip" class="btn btn-primary">Download All Posts as ZIP</a>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Attachment</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% posts.forEach((post) => { %>
+                    <tr>
+                        <td><%= post.article_title %></td>
+                        <td><%= post.student_name %></td>
+                        <td>
+                            <% if (post.article_file.endsWith('.jpg') || post.article_file.endsWith('.jpeg') || post.article_file.endsWith('.png') || post.article_file.endsWith('.gif')) { %>
+                                <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
+                            <% } if (post.article_file.endsWith('.pdf') || post.article_file.endsWith('.doc') || post.article_file.endsWith('.docx') || post.article_file.endsWith('.txt')) { %>
+                                <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
+                            <% } %>
+                        </td>
+                        <td>
+                            <a href="/viewArticle/<%= post.article_id %>" class="btn btn-primary">View detail</a>
+                            <a href="/editArticle/<%= post.article_id %>" class="btn btn-primary">Edit</a>
+                            <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download>Download as ZIP</a>
+                            <form action="/set-default-page/<%= post.article_id %>" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-info">Set as Default</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>

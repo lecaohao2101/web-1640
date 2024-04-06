@@ -3,15 +3,15 @@ const path = require("path");
 const mysql = require("mysql2/promise");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const checkAdminRole = require("./middleware/checkAdmin");
 const checkLoggedIn = require("./middleware/checkLogin");
 const extractUidFromCookie = require("./middleware/exactCookie");
 const adminRouter = require("./router/admin");
 const coordinatorRouter = require("./router/coordinator");
 const marketingRouter = require("./router/marketing");
 const studentRouter = require("./router/student");
-const app = express();
+const {query} = require("express");
 const PORT = process.env.PORT || 3000;
+const app = express();
 
 app.use(cors());
 
@@ -21,6 +21,7 @@ const dbConfig = {
     user: "root",
     password: "",
     database: "lms",
+    // database: "lmsUpdate",
 };
 const pool = mysql.createPool(dbConfig);
 
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //config static file
 app.use(express.json());
+app.use(express.static("public"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //config template

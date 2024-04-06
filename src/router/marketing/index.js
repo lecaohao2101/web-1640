@@ -10,6 +10,7 @@ const dbConfig = {
     user: "root",
     password: "",
     database: "lms",
+    // database: "lmsUpdate",
 };
 const pool = mysql.createPool(dbConfig);
 

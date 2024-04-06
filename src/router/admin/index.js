@@ -5,14 +5,17 @@ const checkLoggedIn = require("../../middleware/checkLogin");
 const checkAdminRole = require("../../middleware/checkAdmin");
 const nodemailer = require("nodemailer");
 
+
 //config database
 const dbConfig = {
     host: "localhost",
     user: "root",
     password: "",
     database: "lms",
+    // database: "lmsUpdate",
 };
 const pool = mysql.createPool(dbConfig);
+
 
 router.use(checkLoggedIn)
 
@@ -55,7 +58,7 @@ router.post("/student/admin-add-student", async (req, res) => {
     });
 
     const mailOptions = {
-        from: "datistpham@gmail.com",
+        from: "lecaohao2101@gmail.com",
         to: email,
         subject: "Information Account Student",
         text: `Hello ${name},\n\nYour account has been created.\nEmail: ${email}\nPassword: ${password}\n\nThank You!.`,
@@ -325,7 +328,54 @@ router.post("/faculty/admin-delete-faculty/:facultyId", async (req, res) => {
     res.redirect("/admin/faculty/admin-manage-faculty");
 });
 
+//____________________________________________________________________________________________________________________/
 
+//dashboard
+router.get("/admin/dashboardData", async (req, res) => {
+    const connection = await pool.getConnection();
+
+    const [studentCountRows] = await connection.execute(
+        "SELECT COUNT(*) AS totalStudents FROM student"
+    );
+    const [deptManagerCountRows] = await connection.execute(
+        "SELECT COUNT(*) AS totalDeptManagers FROM departmentManager"
+    );
+    const [departmentsQuery] = await pool.query('SELECT COUNT(*) AS totalDepartments FROM faculty');
+    const totalDepartments = departmentsQuery[0].totalDepartments;
+
+    // Lấy số lượng posts
+    const [postsQuery] = await pool.query('SELECT COUNT(*) AS totalPosts FROM post');
+    const totalPosts = postsQuery[0].totalPosts;
+
+    // Lấy số lượng marketing managers
+    const [managersQuery] = await pool.query('SELECT COUNT(*) AS totalManagers FROM marketing');
+    const totalManagers = managersQuery[0].totalManagers;
+    connection.release();
+    res.json({
+        totalStudents: studentCountRows[0].totalStudents,
+        totalDeptManagers: deptManagerCountRows[0].totalDeptManagers,
+        totalDepartments,
+        totalPosts,
+        totalManagers
+    });
+});
+
+router.get("/dashboard/analysis", async (req, res) => {
+    res.render("admin/dashboard/admin-analysis");
+});
+
+
+
+//session manage
+router.get("/post/admin-manage-post", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "SELECT * FROM post INNER JOIN student ON post.article_author_id = student.student_id",
+    );
+    connection.release();
+    console.log(rows);
+    res.render("admin/post/admin-manage-post", { title: "Post manager", posts: rows });
+});
 
 
 module.exports = router;
