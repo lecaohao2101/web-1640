@@ -345,7 +345,7 @@ router.post("/faculty/admin-delete-faculty/:facultyId", async (req, res) => {
 //____________________________________________________________________________________________________________________/
 
 //dashboard
-router.get("/admin/dashboardData", async (req, res) => {
+router.get("/dashboardData", async (req, res) => {
     const connection = await pool.getConnection();
 
     const [studentCountRows] = await connection.execute(
@@ -357,11 +357,9 @@ router.get("/admin/dashboardData", async (req, res) => {
     const [departmentsQuery] = await pool.query('SELECT COUNT(*) AS totalDepartments FROM faculty');
     const totalDepartments = departmentsQuery[0].totalDepartments;
 
-    // Lấy số lượng posts
     const [postsQuery] = await pool.query('SELECT COUNT(*) AS totalPosts FROM post');
     const totalPosts = postsQuery[0].totalPosts;
 
-    // Lấy số lượng marketing managers
     const [managersQuery] = await pool.query('SELECT COUNT(*) AS totalManagers FROM marketing');
     const totalManagers = managersQuery[0].totalManagers;
     connection.release();
