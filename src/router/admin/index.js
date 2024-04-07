@@ -466,6 +466,33 @@ router.get('/downloadPostAsZip/:articleId', async (req, res) => {
     }
 });
 
+router.get("/post/admin-view-post/:post_id", async (req, res) => {
+    const connection = await pool.getConnection();
+    const post_id = req.params.post_id;
+    const [rows0] = await connection.query(
+        "SELECT * FROM Comment INNER JOIN departmentManager ON Comment.author_id = departmentManager.department_manager_id INNER JOIN post ON post.article_id = Comment.article_id WHERE post.article_id = ?",
+        [post_id]
+    );
+    const [rows] = await connection.query(
+        "SELECT * FROM post INNER JOIN student ON student.student_id = post.article_author_id WHERE post.article_id = ?",
+        [post_id]
+    );
+    const [rows1] = await connection.query(
+        "SELECT * FROM post WHERE article_id = ?",
+        [post_id]
+    );
+    connection.release();
+    console.log(rows);
+    res.render("admin/post/admin-view-post", {
+        title: "View detail article",
+        post: rows1[0],
+        author: rows[0],
+        comments: rows0,
+    });
+});
+
+
+
 module.exports = router;
 
 
