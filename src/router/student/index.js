@@ -35,6 +35,7 @@ router.get("/student_page", async (req, res) => {
   res.render("student/student_page", { title: "Student" });
 });
 
+//get view post
 router.get("/view_post", async (req, res) => {
   const connection = await pool.getConnection();
   const student_id = req.cookies.uid;
@@ -89,6 +90,7 @@ router.post(
     }
  );
 
+// get create_post
 router.get("/create_post", async (req, res) => {
     res.render("student/create_post");
 });
