@@ -119,7 +119,7 @@ router.post("/edit_post/:article_id", upload.single("file"), async (req, res) =>
                     [title, content, file, article_id]
                 );
                 connection.release();
-                return res.send("Đã cập nhật bài viết thành công");
+                return res.send("Successfully updated post");
             }
             const {title, content, file_old} = req.body;
             const {article_id} = req.params;

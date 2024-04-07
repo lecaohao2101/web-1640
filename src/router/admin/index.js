@@ -7,7 +7,17 @@ const nodemailer = require("nodemailer");
 const path = require("path");
 const fs = require("fs");
 const archiver = require('archiver');
+const multer = require('multer');
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, "../../uploads"));
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    },
+});
+const upload = multer({ storage: storage });
 
 
 //config database
@@ -364,10 +374,12 @@ router.get("/admin/dashboardData", async (req, res) => {
     });
 });
 
+
 router.get("/dashboard/analysis", async (req, res) => {
     res.render("admin/dashboard/admin-analysis");
 });
 
+//______________________________________________________________________________________________________________________/
 
 //manage post
 router.get("/post/admin-manage-post", async (req, res) => {
@@ -491,7 +503,40 @@ router.get("/post/admin-view-post/:post_id", async (req, res) => {
     });
 });
 
+router.get("/post/admin-edit-post/:article_id", async (req, res) => {
+    const connection = await pool.getConnection();
+    const article_id = req.params.article_id;
+    const [rows] = await connection.query(
+        "SELECT * FROM post WHERE article_id = ?",
+        [article_id]
+    );
+    connection.release();
+    res.render("admin/post/admin-edit-post", { title: "Edit article", article: rows[0] });
+});
 
+router.post("/post/admin-edit-edit/:article_id", upload.single("file"), async (req, res) => {
+    if (req.file) {
+        const file = req.file.filename;
+        const { title, content } = req.body;
+        const { article_id } = req.params;
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "UPDATE post SET article_title= ?, article_content= ?, article_file= ? WHERE article_id= ?",
+            [title, content, file, article_id]
+        );
+        connection.release();
+
+    }
+    const { title, content, file_old } = req.body;
+    const { article_id } = req.params;
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "UPDATE post SET article_title= ?, article_content= ?, article_file= ? WHERE article_id= ?",
+        [title, content, file_old, article_id]
+    );
+    connection.release();
+    res.redirect("/admin/post/admin-manage-post");
+});
 
 module.exports = router;
 
