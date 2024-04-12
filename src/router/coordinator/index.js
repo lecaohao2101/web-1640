@@ -57,6 +57,80 @@ router.get("/coordinator_manage_post", async (req, res) => {
     console.log(rows);
     res.render("coordinator/coordinator_manage_post", { title: "Post manager", posts: rows });
  });
- 
+ router.get("/coordinator-edit-post/:article_id", async (req, res) => {
+    const connection = await pool.getConnection();
+    const article_id = req.params.article_id;
+    const [rows] = await connection.query(
+        "SELECT * FROM post WHERE article_id = ?",
+        [article_id]
+    );
+    connection.release();
+    res.render("coordinator/coordinator-edit-post", { title: "Edit article", article: rows[0] });
+});
+router.post("/coordinator-edit-post/:article_id", upload.single("file"), async (req, res) => {
+        if (req.file) {
+            const file = req.file.filename;
+            const { title, content } = req.body;
+            const { article_id } = req.params;
+            const connection = await pool.getConnection();
+            const [rows] = await connection.query(
+                "UPDATE post SET article_title= ?, article_content= ?, article_file= ? WHERE article_id= ?",
+                [title, content, file, article_id]
+            );
+            connection.release();
+            return res.redirect("/coordinator/coordinator-manage-post");
+        }
+        const { title, content, file_old } = req.body;
+        const { article_id } = req.params;
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "UPDATE post SET article_title= ?, article_content= ?, article_file= ? WHERE article_id= ?",
+            [title, content, file_old, article_id]
+        );
+        connection.release();
+        return res.redirect("/coordinator/coordinator-manage-post");
+    });
+
+    router.get("/coordinator-view-post/:post_id", async (req, res) => {
+        const connection = await pool.getConnection();
+        const post_id = req.params.post_id;
+        const [rows0] = await connection.query(
+            "SELECT * FROM Comment INNER JOIN departmentManager ON Comment.author_id = departmentManager.department_manager_id INNER JOIN post ON post.article_id = Comment.article_id WHERE post.article_id = ?",
+            [post_id]
+        );
+        const [rows] = await connection.query(
+            "SELECT * FROM post INNER JOIN student ON student.student_id = post.article_author_id WHERE post.article_id = ?",
+            [post_id]
+        );
+        const [rows1] = await connection.query(
+            "SELECT * FROM post WHERE article_id = ?",
+            [post_id]
+        );
+        connection.release();
+        console.log(rows);
+        res.render("coordinator/coordinator-view-post", {
+            title: "View detail article",
+            post: rows1[0],
+            author: rows[0],
+            comments: rows0,
+        });
+    });
+    
+
+ router.post("/set-default-page/:article_id", async (req, res)=> {
+    const article_id= req.params.article_id
+    const connection = await pool.getConnection();
+    const [rows1] = await connection.query("UPDATE post SET article_default= 1 WHERE article_id= ? ", article_id);
+    connection.release();
+    return res.json({success: true})
+})
+router.post("/unset-default-page/:article_id", async (req, res)=> {
+    const article_id = req.params.article_id;
+    const connection = await pool.getConnection();
+    const [rows1] = await connection.query("UPDATE post SET article_default = 0 WHERE article_id = ? ", [article_id]);
+    connection.release();
+    return res.json({ success: true });
+});
+
 module.exports = router;
 
