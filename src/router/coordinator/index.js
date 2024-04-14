@@ -132,5 +132,42 @@ router.post("/unset-default-page/:article_id", async (req, res)=> {
     return res.json({ success: true });
 });
 
+router.post('/addComment/:article_id', async (req, res) => {
+    try {
+        const author_id = req.cookies.uid;
+        const article_id = req.params.article_id;
+        const { content } = req.body;
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "INSERT INTO Comment(author_id, content, article_id, time_created) VALUES(?, ?, ?, ?)",
+            [author_id, content, article_id, new Date().toString()]
+        );
+
+        connection.release()
+
+        res.status(200).json({ message: 'Comment added successfully' });
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        res.status(500).json({ message: 'Failed to add comment' });
+    }
+});
+router.get('/api/comments/:postId', async (req, res) => {
+    try {
+        const postId = req.params.postId;
+
+        const connection = await pool.getConnection();
+        const [comments] = await connection.query(
+            "SELECT * FROM Comment INNER JOIN departmentManager ON departmentManager.department_manager_id = Comment.author_id WHERE Comment.article_id= ?",
+            [postId]
+        );
+        connection.release()
+        res.status(200).json(comments);
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        res.status(500).json({ message: 'Failed to fetch comments' });
+    }
+});
+
+
 module.exports = router;
 
