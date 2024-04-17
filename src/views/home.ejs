@@ -6,6 +6,7 @@
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
+            background-color: #f8f9fa;
         }
 
         .topnav {
@@ -21,7 +22,7 @@
         .topnav a {
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 13px;
             text-decoration: none;
             font-size: 17px;
             font-weight: bold;
@@ -35,12 +36,14 @@
         .topnav a.active {
             color: white;
         }
+
         .logo img {
             height: 50px;
             width: auto;
             vertical-align: middle;
             margin-right: 10px;
         }
+
         .nav{
             flex: 1;
         }
@@ -65,6 +68,57 @@
 
         }
 
+        .post-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .post {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+        }
+
+        .post h3 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .post p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .post img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .post button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .post button:hover {
+            background-color: #3499d0;
+        }
+
     </style>
 </head>
 <body>
@@ -86,6 +140,61 @@
             <button>Login</button>
         </form>
     </div>
+
+</div>
+
+<div class="post-container">
+    <% posts.forEach((post, index) => { %>
+        <div class="post">
+            <h3><%= post.article_title %></h3>
+            <p><%= post.article_content %></p>
+            <% if (post.article_file && post.article_file.endsWith('.jpg') ||
+                    post.article_file.endsWith('.jpeg') ||
+                    post.article_file.endsWith('.png') ||
+                    post.article_file.endsWith('.gif')) { %>
+                <img
+                        src="http://localhost:3000/uploads/<%= post.article_file %>"
+                        class="img-fluid"
+                        alt="Attachment"
+                />
+                <button class="btn btn-primary">
+                    <a
+                            download
+                            href="http://localhost:3000/uploads/<%= post.article_file %>"
+                            style="color: white"
+                    >Download</a
+                    >
+                </button>
+            <% } else if (post.article_file &&
+                    post.article_file.endsWith('.pdf') ||
+                    post.article_file.endsWith('.doc') ||
+                    post.article_file.endsWith('.docx') ||
+                    post.article_file.endsWith('.txt')) { %>
+                <p>
+                    Attached document:
+                    <a
+                            download
+                            href="http://localhost:3000/uploads/<%= post.article_file %>"
+                    ><%= post.article_file %></a
+                    >
+                    <button class="btn btn-primary">
+                        <a
+                                download
+                                href="http://localhost:3000/uploads/<%= post.article_file %>"
+                                style="color: white"
+                        >Download</a
+                        >
+                    </button>
+                </p>
+            <% } %>
+            <div></div>
+            <br />
+            <div></div>
+        </div>
+        <% if ((index + 1) % 2 === 0) { %>
+            <div style="width: 100%;"></div>
+        <% } %>
+    <% }); %>
 
 </div>
 

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Marketing Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+
+        .chart-container {
+            position: relative;
+            margin-top: 20px;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+          rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+
+</head>
+<body>
+
+
+<div class="topnav">
+    <div class="logo"> <a class="active" href="/marketing/marketing-page"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
+
+    <div class="nav">
+        <a href="/marketing/dashboard/">Dashboard</a>
+        <a href="/marketing/marketing-manage-student">Manage Student</a>
+        <a href="/marketing/marketing-manage-post">Manage Post</a>
+        <a href="/marketing/marketing-manage-magazine">Manage Magazine</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+
+</div>
+
+
+<div class="container mt-5">
+    <h1 style="font-weight: bold; text-align:center">Dashboard</h1>
+
+    <div class="row justify-content-center">
+<!--        <div class="col-md-5">-->
+<!--            <div class="chart-container">-->
+<!--                <canvas id="userChart" width="400" height="200"></canvas>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-md-2"></div>-->
+        <div class="col-md-6">
+            <div class="chart-container">
+                <canvas id="analysisChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    fetch("/marketing/dashboardData")
+        .then((response) => response.json())
+        .then((data) => {
+            loadCharts(data);
+        })
+        .catch((error) => console.error("Error:", error));
+
+    // Load chart data
+    function loadCharts(data) {
+
+        //Analysis chart
+        var ctxAnalysis = document.getElementById("analysisChart").getContext("2d");
+        var analysisChart = new Chart(ctxAnalysis, {
+            type: "pie",
+            data: {
+                labels: ["Faculty", "Posts", "Feedbacks", "Magazines", "Students"],
+                datasets: [
+                    {
+                        label: "Analysis",
+                        data: [
+                            data.totalFaculties,
+                            data.totalPosts,
+                            data.totalComments,
+                            data.totalStudents,
+                            data.totalMagazines,
+                        ],
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.7)",
+                            "rgba(54, 162, 235, 0.7)",
+                            "rgba(255, 206, 86, 0.7)",
+                            "rgba(97, 172, 26, 0.7)",
+                            "rgba(255, 223, 251, 0.7)",
+                        ],
+                        borderColor: [
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 206, 86, 1)",
+                            "rgba(97, 172, 26, 1)",
+                            "rgba(255, 223, 251, 1)",
+                        ],
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+
+
+    }
+
+</script>
+
+
+</body>
+</html>

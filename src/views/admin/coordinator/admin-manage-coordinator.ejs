@@ -84,7 +84,7 @@
         .topnav a {
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 13px;
             text-decoration: none;
             font-size: 17px;
             font-weight: bold;
@@ -139,20 +139,76 @@
             margin: 0 5px;
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .action-buttons button {
+            flex-shrink: 0;
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+
     </style>
 </head>
 <body>
 
 <div class="topnav">
-    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+    <div class="logo"> <a class="active" href="/admin/admin_page"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
 
     <div class="nav">
-        <a class="active" href="/admin/admin_page">Home</a>
         <a href="/admin/dashboard/analysis">Dashboard</a>
-        <a href="/admin/student/admin-manage-student">Manage Student</a>
+        <a href="/admin/faculty/admin-manage-faculty">Manage Faculty</a>
         <a href="/admin/coordinator/admin-manage-coordinator">Manage Coordinator</a>
         <a href="/admin/marketing/admin-manage-marketing">Manage Marketing</a>
-        <a href="/admin/faculty/admin-manage-faculty">Manage Faculty</a>
+        <a href="/admin/faculty/student">Manage Student</a>
+        <a href="/admin/magazine/admin-manage-magazine">Manage Magazine</a>
+        <a href="/admin/post/admin-manage-post">Manage Post</a>
         <a href="/admin/session/admin-manage-session">Manage Session</a>
     </div>
 
@@ -161,18 +217,18 @@
             <button>Logout</button>
         </form>
     </div>
+
 </div>
 
 <div class="container">
-    <h1>Manage Coordinator</h1>
+    <h1>Admin - Manage Coordinator</h1>
     <div class="mb-3">
-        <a href="/admin/coordinator/admin-add-coordinator" class="btn btn-primary">Add Coordinator</a>
+        <a href="/admin/coordinator/admin-add-coordinator" class="btn btn-primary">Create Coordinator</a>
     </div>
     <br/>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Faculty</th>
@@ -182,7 +238,6 @@
         <tbody>
         <% departments.forEach((department) => { %>
             <tr>
-                <td><%= department.department_manager_id %></td>
                 <td><%= department.manager_name %></td>
                 <td><%= department.manager_email %></td>
                 <td><%= department.department_name %></td>
@@ -194,6 +249,11 @@
                 </td>
             </tr>
         <% }); %>
+        <tr>
+            <td colspan="1" style="text-align: left;"><strong>Total Coordinators:</strong></td>
+            <td colspan="5" style="text-align: right;"><strong><%= departments.length %></strong></td>
+        </tr>
+
         </tbody>
     </table>
 </div>

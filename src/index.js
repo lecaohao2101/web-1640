@@ -48,10 +48,15 @@ app.use('/marketing', marketingRouter);
 app.use('/student', studentRouter);
 
 //home page
-app.get('/', async(req, res) => {
+app.get("/", async (req, res) => {
     const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * FROM post WHERE article_default= 1");
     connection.release();
-    res.render("home", {title: "Home Page"});
+    res.render("home", { title: "Home page", posts: rows });
+});
+
+app.get("/home", (req, res) => {
+    res.redirect("/");
 });
 
 //login page
@@ -84,7 +89,7 @@ app.post("/login", async (req, res) => {
         res.cookie("uid", rows1[0].department_manager_id);
         res.cookie("role", "d_manager");
         connection.release();
-        return res.redirect("coordinator/coordinator_page");
+        return res.redirect("coordinator/coordinator-page");
     }
 
     //marketing
@@ -96,7 +101,7 @@ app.post("/login", async (req, res) => {
         res.cookie("uid", rows2[0].marketing_id);
         res.cookie("role", "marketing");
         connection.release();
-        return res.redirect("marketing/marketing_page");
+        return res.redirect("marketing/marketing-page");
     }
 
     //student

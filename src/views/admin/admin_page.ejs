@@ -22,7 +22,7 @@
         .topnav a {
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 13px;
             text-decoration: none;
             font-size: 17px;
             font-weight: bold;
@@ -36,13 +36,14 @@
         .topnav a.active {
             color: white;
         }
+
         .logo img {
             height: 50px;
             width: auto;
             vertical-align: middle;
-            margin-right: 10px;
         }
-        .nav{
+
+        .nav {
             flex: 1;
         }
 
@@ -63,24 +64,48 @@
         button:hover {
             opacity: 0.8;
             background-color: #3499d0;
-
         }
 
+        .welcome-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 200px;
+            animation: slideIn 0.5s ease-in-out forwards;
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .table th,
+            .table td {
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
 
-
 <div class="topnav">
-    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+    <div class="logo"> <a class="active" href="/admin/admin_page"><img src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
 
     <div class="nav">
-<!--        <a class="active" href="/admin/admin_page">Home</a>-->
         <a href="/admin/dashboard/analysis">Dashboard</a>
-        <a href="/admin/student/admin-manage-student">Manage Student</a>
+        <a href="/admin/faculty/admin-manage-faculty">Manage Faculty</a>
         <a href="/admin/coordinator/admin-manage-coordinator">Manage Coordinator</a>
         <a href="/admin/marketing/admin-manage-marketing">Manage Marketing</a>
-        <a href="/admin/faculty/admin-manage-faculty">Manage Faculty</a>
+        <a href="/admin/faculty/student">Manage Student</a>
+        <a href="/admin/magazine/admin-manage-magazine">Manage Magazine</a>
         <a href="/admin/post/admin-manage-post">Manage Post</a>
         <a href="/admin/session/admin-manage-session">Manage Session</a>
     </div>
@@ -90,9 +115,11 @@
             <button>Logout</button>
         </form>
     </div>
-
 </div>
 
+<div class="welcome-container">
+    <h1>Welcome Admin</h1>
+</div>
 
 </body>
 </html>

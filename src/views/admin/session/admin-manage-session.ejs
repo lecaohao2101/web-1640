@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Session</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            background-color: #3499d0;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .btndel {
+            background-color: #ff0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #3a7efc;
+        }
+        .btndel:hover {
+            background-color: #de1010;
+
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            margin: 0 5px;
+            align-items: center;
+        }
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="topnav">
+    <div class="logo"> <a class="active" href="/admin/admin_page"><img src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
+
+    <div class="nav">
+        <a href="/admin/dashboard/analysis">Dashboard</a>
+        <a href="/admin/faculty/admin-manage-faculty">Manage Faculty</a>
+        <a href="/admin/coordinator/admin-manage-coordinator">Manage Coordinator</a>
+        <a href="/admin/marketing/admin-manage-marketing">Manage Marketing</a>
+        <a href="/admin/faculty/student">Manage Student</a>
+        <a href="/admin/magazine/admin-manage-magazine">Manage Magazine</a>
+        <a href="/admin/post/admin-manage-post">Manage Post</a>
+        <a href="/admin/session/admin-manage-session">Manage Session</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Admin - Manage Session</h1>
+    <a href="/admin/session/admin-add-session" class="btn">Create Session</a>
+    <br/>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% academicYears.forEach(year => { %>
+            <tr>
+                <td><%= year.year %></td>
+                <td><%= year.start_date %></td>
+                <td><%= year.end_date %></td>
+                <td class="action-buttons">
+                    <a href="/admin/session/admin-edit-session/<%= year.id %>" class="btn">Edit</a>
+                    <form action="/admin/session/admin-delete-session/<%= year.id %>" method="POST" style="display: inline;">
+                        <button type="submit" class="btndel">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        <tr>
+            <td colspan="1" style="text-align: left;"><strong>Total Session:</strong></td>
+            <td colspan="5" style="text-align: right;"><strong><%= academicYears.length %></strong></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
+
+

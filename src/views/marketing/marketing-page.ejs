@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Student</title>
+    <title>Marketing Manager</title>
     <style>
         body {
             margin: 0;
@@ -22,7 +22,7 @@
         .topnav a {
             color: #f2f2f2;
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 13px;
             text-decoration: none;
             font-size: 17px;
             font-weight: bold;
@@ -65,6 +65,24 @@
             background-color: #3499d0;
 
         }
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
 
     </style>
 </head>
@@ -72,12 +90,13 @@
 
 
 <div class="topnav">
-    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+    <div class="logo"> <a class="active" href="/marketing/marketing-page"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
 
     <div class="nav">
-        <a class="active" href="#home">Home</a>
-        <a href="/student/view_post">My Post</a>
-        <a href="/student/create_post">Create Post</a>
+        <a href="/marketing/dashboard/">Dashboard</a>
+        <a href="/marketing/marketing-manage-student">Manage Student</a>
+        <a href="/marketing/marketing-manage-post">Manage Post</a>
+        <a href="/marketing/marketing-manage-magazine">Manage Magazine</a>
     </div>
 
     <div>

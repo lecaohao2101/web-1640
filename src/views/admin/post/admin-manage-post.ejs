@@ -3,54 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Posts</title>
+    <title>Manage Posts</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .nav {
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #000;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .table tr:hover {
+            background-color: #e2e6ea;
+            transition: background-color 0.3s ease;
+        }
+
+        .table a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .table a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #000;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Admin - Manage Posts</h1>
-            <div class="mb-3">
-                <a href="/admin/downloadPostsZip" class="btn btn-primary">Download All Posts as ZIP</a>
-            </div>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Attachment</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <% posts.forEach((post) => { %>
-                    <tr>
-                        <td><%= post.article_title %></td>
-                        <td><%= post.student_name %></td>
-                        <td>
-                            <% if (post.article_file.endsWith('.jpg') || post.article_file.endsWith('.jpeg') || post.article_file.endsWith('.png') || post.article_file.endsWith('.gif')) { %>
-                                <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
-                            <% } if (post.article_file.endsWith('.pdf') || post.article_file.endsWith('.doc') || post.article_file.endsWith('.docx') || post.article_file.endsWith('.txt')) { %>
-                                <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
-                            <% } %>
-                        </td>
-                        <td>
-                            <a href="/admin/post/admin-view-post/<%= post.article_id %>" class="btn btn-primary">View detail</a>
-                            <a href="/admin/post/admin-edit-post/<%= post.article_id %>" class="btn btn-primary">Edit</a>
-<!--                            <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download>Download as ZIP</a>-->
-                            <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download="<%= post.article_title %>.zip">Download as ZIP</a>
+<div class="topnav">
+    <div class="logo"> <a class="active" href="/admin/admin_page"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
 
-<!--                            <form action="/set-default-page/<%= post.article_id %>" method="post" style="display: inline;">-->
-<!--                                <button type="submit" class="btn btn-info">Set as Default</button>-->
-<!--                            </form>-->
-                        </td>
-                    </tr>
-                <% }); %>
-                </tbody>
-            </table>
-        </div>
+    <div class="nav">
+        <a href="/admin/dashboard/analysis">Dashboard</a>
+        <a href="/admin/faculty/admin-manage-faculty">Manage Faculty</a>
+        <a href="/admin/coordinator/admin-manage-coordinator">Manage Coordinator</a>
+        <a href="/admin/marketing/admin-manage-marketing">Manage Marketing</a>
+        <a href="/admin/faculty/student">Manage Student</a>
+        <a href="/admin/magazine/admin-manage-magazine">Manage Magazine</a>
+        <a href="/admin/post/admin-manage-post">Manage Post</a>
+        <a href="/admin/session/admin-manage-session">Manage Session</a>
     </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    <h1 style="font-weigth:bold; text-align:center">Admin - Manage Posts</h1>
+    <div class="mb-3">
+        <a href="/admin/downloadPostsZip" class="btn btn-primary">Download All Posts as ZIP</a>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Attachment</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% posts.forEach((post) => { %>
+            <tr>
+                <td><%= post.article_title %></td>
+                <td><%= post.student_name %></td>
+                <td>
+                    <% if (post.article_file.endsWith('.jpg') || post.article_file.endsWith('.jpeg') || post.article_file.endsWith('.png') || post.article_file.endsWith('.gif')) { %>
+                        <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
+                    <% } if (post.article_file.endsWith('.pdf') || post.article_file.endsWith('.doc') || post.article_file.endsWith('.docx') || post.article_file.endsWith('.txt')) { %>
+                        <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
+                    <% } %>
+                </td>
+                <td>
+                    <a href="/admin/post/admin-edit-post/<%= post.article_id %>" class="btn btn-primary">Edit</a>
+                    <a href="/admin/downloadPostAsZip/<%= post.article_id %>" class="btn btn-secondary" download="<%= post.article_title %>.zip">Download as ZIP</a>
+                </td>
+            </tr>
+        <% }); %>
+        <tr>
+            <td colspan="1" style="text-align: left;"><strong>Total Post:</strong></td>
+            <td colspan="4" style="text-align: right;"><strong><%= posts.length %></strong></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
