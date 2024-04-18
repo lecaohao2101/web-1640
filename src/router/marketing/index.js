@@ -26,6 +26,36 @@ router.get("/marketing-page", async (req, res) => {
 });
 
 
+//student mange
+router.get("/marketing-manage-student", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT student.*, faculty.department_name FROM student INNER JOIN faculty ON student.student_department_id = faculty.department_id ORDER BY student.student_name");
+    connection.release();
+    res.render("marketing/marketing-manage-student", { students: rows });
+});
+
+
+//create student
+router.get("/marketing-add-student", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * from faculty");
+    connection.release();
+    res.render("marketing/marketing-manage-student", { faculty: rows});
+});
+
+
+//manage post
+router.get("/marketing-manage-post", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query(
+        "SELECT * FROM post INNER JOIN student ON post.article_author_id = student.student_id",
+    );
+    connection.release();
+    console.log(rows);
+    res.render("marketing/marketing-manage-post", { title: "Post manager", posts: rows });
+});
+
+
 //dashboard
 router.get("/dashboard", async (req, res) => {res.render("marketing/dashboard");});
 router.get("/dashboardData", async (req, res) => {
