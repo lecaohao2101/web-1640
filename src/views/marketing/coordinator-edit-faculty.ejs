@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Faculty</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="nav">
+    <a href="coordinator-page">Home</a>
+    <a href="coordinator_dashboard">Dashboard</a>
+    <a href="coordinator-manage-student">Manage Student</a>
+    <a href="coordinator-manage-post">Manage Post</a>
+    <a href="coordinator-manage-faculty">Manage Faculty</a>
+    <a href="coordinator-create-magazine">Create Magazine</a>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Coordinator - Update Faculty</h1>
+            <form action="/coordinator/coordinator-edit-faculty/<%= department.department_id %>" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Faculty Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="<%= department.department_name %>" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>

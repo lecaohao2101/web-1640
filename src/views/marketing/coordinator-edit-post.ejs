@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Post</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+
+        .container {
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .col-md-6 {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: auto;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="topnav">
+    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+
+    <div class="nav">
+        <a href="http://localhost:3000/coordinator/coordinator-page">Home</a>
+        <a href="http://localhost:3000/coordinator/coordinator-manage-student">Manage Student</a>
+        <a href="http://localhost:3000/coordinator/coordinator-manage-post">Manage Post</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+
+</div>
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4">Update Articel</h1>
+            <form method="post" enctype="multipart/form-data" action="/coordinator/coordinator-edit-post/<%= article.article_id %>">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="<%= article.article_title %>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="6" required><%= article.article_content %></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">Upload Image or Document</label>
+                    <input type="file" class="form-control" id="file" name="file">
+                    <input type="hidden" class="form-control" id="file_old" name="file_old" value="<%= article.article_file %>">
+                    <% if (article.article_file) { %>
+                        <p>Current attachment: <a href="http://localhost:3000/uploads/<%= article.article_file %>"><%= article.article_file %></a></p>
+                    <% } %>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Article</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Post with Comments</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .nav {
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .card-text {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .comment-form button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .comment-form button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="topnav">
+    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+
+    <div class="nav">
+        <a href="http://localhost:3000/coordinator/coordinator-page">Home</a>
+        <a href="http://localhost:3000/coordinator/coordinator-manage-student">Manage Student</a>
+        <a href="http://localhost:3000/coordinator/coordinator-manage-post">Manage Post</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+
+</div>
+
+<div class="container mt-5">
+    <h1>View Post with Comments</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">
+                Title Post: <%= post.article_title %>
+            </h5>
+            <h6 style="font-weigth:bold; margin-left: 1100px">Author: <%= author.student_name %></h6>
+            <p class="card-text">Content: <%= post.article_content %></p>
+            <% if (post.article_file.endsWith('.jpg') || post.article_file.endsWith('.jpeg') || post.article_file.endsWith('.png') || post.article_file.endsWith('.gif')) { %>
+                <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
+            <% } if (post.article_file.endsWith('.pdf') || post.article_file.endsWith('.doc') || post.article_file.endsWith('.docx') || post.article_file.endsWith('.txt')) { %>
+                <a href="http://localhost:3000/uploads/<%= post.article_file %>"><%= post.article_file %></a>
+            <% } %>
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+
+    <h2>Comments</h2>
+    <table class="table" id="commentsTable">
+        <thead>
+        <tr>
+            <th scope="col">Author</th>
+            <th scope="col">Comment</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div id="addCommentForm">
+        <div class="mb-3">
+            <label for="content" class="form-label"></label>
+            <textarea class="form-control" id="content" name="content" rows="3" placeholder="Write comment..." required></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="addComment()">Add Comment</button>
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+<script>
+    function addComment() {
+        const content = document.getElementById("content").value;
+        const postId = "<%= post.article_id %>";
+
+        axios
+            .post(`/coordinator/addComment/${postId}`, { content })
+            .then((response) => {
+                console.log(response.data);
+                listComment()
+
+                document.getElementById("content").value = "";
+            })
+            .catch((error) => {
+                console.error("Error adding comment:", error);
+            });
+    }
+
+    function updateCommentsTable(list) {
+        return (document.querySelector("tbody").innerHTML = list.reverse()
+            .map(
+                (item) => `
+        <tr>
+          <td>${item.manager_name}</td>
+          <td>${item.content}</td>
+          </tr>
+        `
+            )
+            .join(""));
+    }
+
+    const listComment = async () => {
+        const postId = "<%= post.article_id %>";
+        axios
+            .get(`/coordinator/api/comments/${postId}`)
+            .then((response) => {
+                const comments = response.data;
+                updateCommentsTable(comments);
+            })
+            .catch((error) => {
+                console.error("Error fetching comments:", error);
+            });
+    };
+    listComment();
+</script>
+</body>
+</html>
