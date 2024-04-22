@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Article</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="topnav">
+    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+
+    <div class="nav">
+        <a class="active" href="#home">Home</a>
+        <a href="/student/view_post">My Post</a>
+        <a href="/student/create_post">Create Post</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+
+</div>
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4">Add Article</h1>
+            <form method="post" enctype="multipart/form-data" >
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="6" placeholder="Enter content" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">Upload Image or Document</label>
+                    <input type="file" class="form-control" id="file" name="file">
+                </div>
+                <div class="mb-3">
+                    <label for="magazine" class="form-label">Choose Magazine</label>
+                    <select class="form-select" id="magazine" name="magazine">
+                        <% magazines.forEach(magazine => { %>
+                            <option value="<%= magazine.magazine_id %>"><%= magazine.magazine_name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="agreePolicy" required>
+                    <label class="form-check-label" for="agreePolicy">I agree with the policy</label>
+                </div>
+                <input type="hidden" name="student_id" value="<%= uid %>">
+                <button type="submit" class="btn btn-primary" id="submitButton" disabled>Add Article</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('agreePolicy').addEventListener('change', function() {
+        document.getElementById('submitButton').disabled = !this.checked;
+    });
+</script>
+</body>
+</html>
+
