@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+
+        .welcome-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 200px;
+            animation: slideIn 0.5s ease-in-out forwards;
+        }
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+            .topnav .nav{
+                display: grid;
+                grid-template-columns: auto auto auto auto;
+                margin-top: 10px;
+            }
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }   
+
+    </style>
+</head>
+<body>
+
+
+<div class="topnav">
+    <div class="logo"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></div>
+
+    <div class="nav">
+        <a class="active" href="/student/student_page">Home</a>
+        <a href="/student/view_post">My Post</a>
+        <a href="/student/create_post">Create Post</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+
+</div>
+<div class="welcome-container">
+        <h1>Welcome <%= studentName %>! You are studying in <%= facultyName %> faculty.</h1>
+</div>
+
+
+
+
+</body>
+</html>
