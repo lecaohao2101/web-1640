@@ -50,7 +50,7 @@
             flex: 1;
         }
 
-        button {
+        .button {
             background-color: #3a7efc;
             color: white;
             padding: 14px 30px;
@@ -64,7 +64,7 @@
             font-weight: bold;
         }
 
-        button:hover {
+        .button:hover {
             opacity: 0.8;
             background-color: #3499d0;
         }
@@ -158,13 +158,18 @@
                 height: 30px;
                 margin-right: 0;
             }
+            .topnav .nav{
+                display: grid;
+                grid-template-columns: auto auto auto auto;
 
+            }
             .container {
                 padding: 10px;
             }
 
             .btn-container {
                 flex-direction: column;
+                
             }
 
             .table th, .table td {

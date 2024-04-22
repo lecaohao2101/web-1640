@@ -138,6 +138,34 @@
             flex: 1;
             margin: 0 5px;
         }
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .topnav .nav {
+                display: grid;
+                grid-template-columns: auto auto auto auto;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .table th,
+            .table td {
+                padding: 8px;
+            }
+        }
 
     </style>
 </head>

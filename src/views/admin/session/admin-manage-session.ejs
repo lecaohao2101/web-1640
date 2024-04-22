@@ -57,6 +57,7 @@
             display: inline-block;
             font-size: 16px;
         }
+
         .btndel {
             background-color: #ff0000;
             color: white;
@@ -73,6 +74,7 @@
         .btn:hover {
             background-color: #3a7efc;
         }
+
         .btndel:hover {
             background-color: #de1010;
 
@@ -117,13 +119,15 @@
         .topnav a.active {
             color: white;
         }
+
         .logo img {
             height: 50px;
             width: auto;
             vertical-align: middle;
             margin-right: 10px;
         }
-        .nav{
+
+        .nav {
             flex: 1;
         }
 
@@ -146,6 +150,7 @@
             background-color: #3499d0;
 
         }
+
         .action-buttons {
             display: flex;
             justify-content: center;
@@ -157,6 +162,7 @@
             margin: 0 5px;
             align-items: center;
         }
+
         @media screen and (max-width: 600px) {
             .topnav {
                 flex-direction: column;
@@ -164,6 +170,11 @@
 
             .topnav a {
                 padding: 10px;
+            }
+
+            .topnav .nav {
+                display: grid;
+                grid-template-columns: auto auto auto auto;
             }
 
             .logo img {
@@ -175,7 +186,8 @@
                 padding: 10px;
             }
 
-            .table th, .table td {
+            .table th,
+            .table td {
                 padding: 8px;
             }
         }
