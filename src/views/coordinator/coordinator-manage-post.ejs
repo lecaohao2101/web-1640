@@ -50,7 +50,7 @@
             flex: 1;
         }
 
-        button {
+        .button {
             background-color: #3a7efc;
             color: white;
             padding: 14px 30px;
@@ -64,7 +64,7 @@
             font-weight: bold;
         }
 
-        button:hover {
+        .button:hover {
             opacity: 0.8;
             background-color: #3499d0;
         }
@@ -155,20 +155,22 @@
         @media screen and (max-width: 768px) {
             .topnav {
                 flex-direction: column;
-                align-items: stretch;
             }
 
             .topnav a {
-                padding: 10px 0;
+                padding: 10px;
             }
-
-            .topnav .logo {
-                margin-bottom: 10px;
+            .topnav .nav{
+                margin-top: 15px;
             }
-
-            .btn-group .btn {
+            .logo img {
+                height: 30px;
                 margin-right: 0;
-                margin-bottom: 10px;
+            }
+            tbody .btn-group  {
+                display: grid;
+                grid-gap: 10px;
+                justify-content: center;
             }
         }
 
