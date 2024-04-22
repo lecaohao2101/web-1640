@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %></title>
+</head>
+<body>
+
+<h2><%= title %></h2>
+
+<div class="post-container">
+    <% posts.forEach((post, index) => { %>
+        <div class="post">
+            <h3><%= post.article_title %></h3>
+            <p><%= post.article_content %></p>
+            <% if (post.article_file && post.article_file.endsWith('.jpg') ||
+                    post.article_file.endsWith('.jpeg') ||
+                    post.article_file.endsWith('.png') ||
+                    post.article_file.endsWith('.gif')) { %>
+                <img
+                        src="http://localhost:3000/uploads/<%= post.article_file %>"
+                        class="img-fluid"
+                        alt="Attachment"
+                />
+                <button class="btn btn-primary">
+                    <a
+                            download
+                            href="http://localhost:3000/uploads/<%= post.article_file %>"
+                            style="color: white"
+                    >Download</a
+                    >
+                </button>
+            <% } else if (post.article_file &&
+                    post.article_file.endsWith('.pdf') ||
+                    post.article_file.endsWith('.doc') ||
+                    post.article_file.endsWith('.docx') ||
+                    post.article_file.endsWith('.txt')) { %>
+                <p>
+                    Attached document:
+                    <a
+                            download
+                            href="http://localhost:3000/uploads/<%= post.article_file %>"
+                    ><%= post.article_file %></a
+                    >
+                    <button class="btn btn-primary">
+                        <a
+                                download
+                                href="http://localhost:3000/uploads/<%= post.article_file %>"
+                                style="color: white"
+                        >Download</a
+                        >
+                    </button>
+                </p>
+            <% } %>
+            <div></div>
+            <br />
+            <div></div>
+        </div>
+        <% if ((index + 1) % 2 === 0) { %>
+            <div style="width: 100%;"></div>
+        <% } %>
+    <% }); %>
+
+</div>
+
+</body>
+</html>

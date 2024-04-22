@@ -56,6 +56,217 @@ router.get("/marketing-manage-post", async (req, res) => {
 });
 
 
+//download post
+router.get('/downloadPostsZip', async (req, res) => {
+    try {
+        const zipFileName = 'posts.zip';
+        const output = fs.createWriteStream(zipFileName);
+        const archive = archiver('zip');
+        archive.pipe(output);
+
+        const connection = await pool.getConnection();
+        const [posts] = await connection.query(
+            "SELECT * FROM post INNER JOIN student ON post.article_author_id = student.student_id",
+        );
+
+        for (const post of posts) {
+            const folderName = `${post.article_title}-${post.student_name.replace(/ /g, '_')}`;
+            const folderPath = path.join(__dirname, folderName);
+            const attachmentPath = path.join(__dirname, '..', 'uploads', post.article_file);
+
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
+            }
+
+            fs.copyFileSync(attachmentPath, path.join(folderPath, post.article_file));
+
+            archive.directory(folderPath, folderName);
+        }
+
+        archive.finalize();
+
+        output.on('close', () => {
+            res.download(zipFileName, zipFileName, (err) => {
+                if (!err) {
+                    fs.unlinkSync(zipFileName);
+                }
+            });
+        });
+    } catch (err) {
+        console.error('Error creating zip file:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+router.get('/downloadPostAsZip/:articleId', async (req, res) => {
+    try {
+        const articleId = req.params.articleId;
+        const connection = await pool.getConnection();
+        const [rows] = await connection.query(
+            "SELECT * FROM post INNER JOIN student ON post.article_author_id = student.student_id WHERE article_id = ?",
+            [articleId]
+        );
+        connection.release();
+        const post = rows[0];
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        const output = fs.createWriteStream(__dirname + '/post.zip');
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+        const fileName = `${post.article_title}-${post.student_name}.zip`; // Tạo tên file mới
+        archive.file(__dirname + '/uploads/' + post.article_file, { name: post.article_file });
+
+        archive.pipe(output);
+
+        output.on('close', () => {
+            res.download(__dirname + '/post.zip', fileName, (err) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ error: 'Server error' });
+                }
+            });
+        });
+
+        archive.on('error', (err) => {
+            console.error(err);
+            return res.status(500).json({ error: 'Server error' });
+        });
+
+        archive.finalize();
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+
+//manage magazine post
+router.get("/marketing-manage-magazine-post/:magazineId", async (req, res) => {
+    try {
+        const magazineId = req.params.magazineId;
+        const connection = await pool.getConnection();
+        const [posts] = await connection.query(
+            "SELECT post.*, student.student_name AS author_name FROM post JOIN student ON post.article_author_id = student.student_id WHERE post.magazine_id = ?",
+            [magazineId]
+        );
+        connection.release();
+        res.render("marketing/marketing-manage-magazine-post", { title: "Manage Magazine Post", posts: posts });
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+        res.status(500).send("Error fetching posts. Please try again later.");
+    }
+});
+
+
+//manage magazine
+router.get("/marketing-manage-magazine", async (req, res) => {
+    try {
+        const connection = await pool.getConnection();
+        const [magazines] = await connection.query(
+            "SELECT magazine.magazine_id, magazine.magazine_name, magazine.start_date, magazine.end_date, faculty.department_name FROM magazine JOIN faculty ON magazine.faculty_id = faculty.department_id ORDER BY magazine.magazine_name"
+        );
+        connection.release();
+        res.render("marketing/marketing-manage-magazine", { title: "Manage Magazine", magazines: magazines });
+    } catch (error) {
+        console.error("Error fetching magazines:", error);
+        res.status(500).send("Error fetching magazines. Please try again later.");
+    }
+});
+
+
+//create magazine
+router.get("/marketing-create-magazine", async (req, res) => {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.query("SELECT * from faculty");
+    connection.release();
+    res.render("marketing/marketing-create-magazine", { faculty: rows });
+});
+router.post("/marketing-create-magazine", async (req, res) => {
+    const { magazine_name, start_date, end_date, faculty_id } = req.body;
+
+    try {
+        const connection = await pool.getConnection();
+        await connection.query(
+            "INSERT INTO magazine (magazine_name, start_date, end_date, faculty_id) VALUES (?, ?, ?, ?)",
+            [magazine_name, start_date, end_date, faculty_id]
+        );
+        connection.release();
+
+        res.redirect("/marketing/marketing-manage-magazine");
+    } catch (error) {
+        console.error("Error creating magazine:", error);
+        res.status(500).send("Error creating magazine. Please try again later.");
+    }
+});
+
+
+// Edit magazine
+router.get("/marketing-edit-magazine/:magazineId", async (req, res) => {
+    const magazineId = req.params.magazineId;
+
+    try {
+        const connection = await pool.getConnection();
+
+        const [magazine] = await connection.query(
+            "SELECT * FROM magazine WHERE magazine_id = ?",
+            [magazineId]
+        );
+
+        if (magazine.length === 0) {
+            connection.release();
+            return res.status(404).send("Magazine not found");
+        }
+
+        const [faculty] = await connection.query(
+            "SELECT * FROM faculty"
+        );
+
+        connection.release();
+        res.render("marketing/marketing-edit-magazine", { title: "Edit Magazine", magazine: magazine[0], faculty: faculty });
+    } catch (error) {
+        console.error("Error fetching magazine details:", error);
+        res.status(500).send("Error fetching magazine details. Please try again later.");
+    }
+});
+router.post("/marketing-edit-magazine/:magazineId", async (req, res) => {
+    const magazineId = req.params.magazineId;
+    const { magazine_name, start_date, end_date, faculty_id } = req.body;
+
+    try {
+        const connection = await pool.getConnection();
+        await connection.query(
+            "UPDATE magazine SET magazine_name = ?, start_date = ?, end_date = ?, faculty_id = ? WHERE magazine_id = ?",
+            [magazine_name, start_date, end_date, faculty_id, magazineId]
+        );
+
+        connection.release();
+        res.redirect("/marketing/marketing-manage-magazine");
+    } catch (error) {
+        console.error("Error updating magazine:", error);
+        res.status(500).send("Error updating magazine. Please try again later.");
+    }
+});
+
+
+//delete magazine
+router.post("/marketing-delete-magazine/:id", async (req, res) => {
+    const magazineId = req.params.id;
+    const connection = await pool.getConnection();
+    try {
+        await connection.query("DELETE FROM magazine WHERE magazine_id = ?", [magazineId]);
+        res.redirect("/marketing/marketing-manage-magazine");
+    } catch (error) {
+        console.error("Error deleting magazine:", error);
+        res.status(500).send("Error deleting magazine");
+    } finally {
+        connection.release();
+    }
+});
+
+
 //dashboard
 router.get("/dashboard", async (req, res) => {res.render("marketing/dashboard");});
 router.get("/dashboardData", async (req, res) => {

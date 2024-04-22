@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Magazine</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3499d0;
+        }
+
+        .topnav {
+            overflow: hidden;
+            background-color: #3a7efc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-weight: bold;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 13px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .topnav a:hover {
+            background-color: #3499d0;
+            color: black;
+        }
+
+        .topnav a.active {
+            color: white;
+        }
+        .logo img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .nav{
+            flex: 1;
+        }
+
+        button {
+            background-color: #3a7efc;
+            color: white;
+            padding: 14px 30px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+            background-color: #3499d0;
+
+        }
+        @media screen and (max-width: 600px) {
+            .topnav {
+                flex-direction: column;
+            }
+
+            .topnav a {
+                padding: 10px;
+            }
+
+            .logo img {
+                height: 30px;
+                margin-right: 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="topnav">
+    <div class="logo"> <a class="active" href="/marketing/marketing-page"><img  src="https://cdn.haitrieu.com/wp-content/uploads/2022/12/Icon-Truong-Dai-hoc-Greenwich-Viet-Nam.png" alt="Logo"></a></div>
+
+    <div class="nav">
+        <a href="/marketing/dashboard/">Dashboard</a>
+        <a href="/marketing/marketing-manage-student">Manage Student</a>
+        <a href="/marketing/marketing-manage-post">Manage Post</a>
+        <a href="/marketing/marketing-manage-magazine">Manage Magazine</a>
+    </div>
+
+    <div>
+        <form action="/login_page" method="get">
+            <button>Logout</button>
+        </form>
+    </div>
+
+</div>
+<div class="container">
+    <h1>Edit Magazine</h1>
+    <form action="/marketing/marketing-edit-magazine/<%= magazine.magazine_id %>" method="POST">
+        <label for="magazine_name">Magazine Name:</label>
+        <input type="text" id="magazine_name" name="magazine_name" value="<%= magazine.magazine_name %>" required>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="<%= magazine.start_date %>" required>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="<%= magazine.end_date %>" required>
+
+        <label for="end_date">Faculty:</label>
+        <select class="form-select" name="faculty_id">
+            <% faculty.forEach(function(item) { %>
+                <option value="<%= item.department_id %>" <%= (item.department_id == magazine.faculty_id) ? 'selected' : '' %>><%= item.department_name %></option>
+            <% }); %>
+        </select>
+
+
+        <br/>
+        <input type="submit" value="Update Magazine">
+    </form>
+</div>
+</body>
+
+</html>
